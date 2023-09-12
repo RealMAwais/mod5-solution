@@ -24,10 +24,10 @@ var insertHtml = function(selector, html){
   targetElem.innerHTML = html;
 };
 
-var menuItemsUrl =
-  "https://davids-restaurant.herokuapp.com/menu_items.json?category=";
-var menuItemsTitleHtml = "snippets/menu-items-title.html";
-var menuItemHtml = "snippets/menu-item.html";
+// var menuItemsUrl =
+//   "https://davids-restaurant.herokuapp.com/menu_items.json?category=";
+// var menuItemsTitleHtml = "snippets/menu-items-title.html";
+// var menuItemHtml = "snippets/menu-item.html";
 
 // Convenience function for inserting innerHTML for 'select'
 // var insertHtml = function (selector, html) {
