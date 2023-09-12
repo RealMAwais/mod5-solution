@@ -15,19 +15,25 @@ var dc = {};
 
 var homeHtmlUrl = "snippets/home-snippet.html";
 var allCategoriesUrl =
-  "https://davids-restaurant.herokuapp.com/categories.json";
+  "https://coursera-jhu-default-rtdb.firebaseio.com/categories.json";
 var categoriesTitleHtml = "snippets/categories-title-snippet.html";
 var categoryHtml = "snippets/category-snippet.html";
+
+var insertHtml = function(selector, html){
+  var targetElem = document.querySelector(selector);
+  targetElem.innerHTML = html;
+};
+
 var menuItemsUrl =
   "https://davids-restaurant.herokuapp.com/menu_items.json?category=";
 var menuItemsTitleHtml = "snippets/menu-items-title.html";
 var menuItemHtml = "snippets/menu-item.html";
 
 // Convenience function for inserting innerHTML for 'select'
-var insertHtml = function (selector, html) {
-  var targetElem = document.querySelector(selector);
-  targetElem.innerHTML = html;
-};
+// var insertHtml = function (selector, html) {
+//   var targetElem = document.querySelector(selector);
+//   targetElem.innerHTML = html;
+// };
 
 // Show loading icon inside element identified by 'selector'.
 var showLoading = function (selector) {
@@ -35,6 +41,12 @@ var showLoading = function (selector) {
   html += "<img src='images/ajax-loader.gif'></div>";
   insertHtml(selector, html);
 };
+
+var insertProperty = function(string, propName, propValue){
+  var propToReplace = " {{ " + propName + " }} ";
+  string = string.replace(new RegExp(propToReplace, "g"), propValue);
+  return string;
+}
 
 
 document.addEventListener("DOMContentLoaded", function (event) {
@@ -47,7 +59,38 @@ document.addEventListener("DOMContentLoaded", function (event) {
     },
     false);
 });
+dc.loadMenuCategories = function (){
+  showLoading("#main-content");
+  $ajaxUtils.sendGetRequest(allCategoriesUrl, buildAndShowCategoriesHTML);
+};
 
+function buildAndShowCategoriesHTML (categories){
+  $ajaxUtils.sendGetRequest(categoriesTitleHtml, function(categoriesTitleHtml){
+    $ajaxUtils.sendGetRequest(categoryHtml, function(categoryHtml){
+      var categoriesViewHtml = buildAndShowCategoriesHTML(categories, categoriesTitleHtml, categoryHtml);
+      insertHtml("#main-content", categoriesViewHtml);
+    }, false);
+  }, false);
+}
+
+
+
+function buildCategoriesViewHtml(categories, categoriesTitleHtml, categoryHtml){
+  var finalHtml = categoriesTitleHtml;
+  finalHtml += "<section class='row'>";
+
+  for(var i=0; i<categories.length; i++){
+
+    var html = categoryHtml;
+    var name = "" + categories[i].name;
+    var short_name = "" + categories[i].short_name;
+    html = insertProperty(html, "name", name);
+    html = insertProperty(html, "short_name", short_name);
+
+    finalHtml += html;
+
+  }
+}
 global.$dc = dc;
 
 })(window);
