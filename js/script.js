@@ -67,7 +67,7 @@ dc.loadMenuCategories = function (){
 function buildAndShowCategoriesHTML (categories){
   $ajaxUtils.sendGetRequest(categoriesTitleHtml, function(categoriesTitleHtml){
     $ajaxUtils.sendGetRequest(categoryHtml, function(categoryHtml){
-      var categoriesViewHtml = buildAndShowCategoriesHTML(categories, categoriesTitleHtml, categoryHtml);
+      var categoriesViewHtml = buildCategoriesViewHtml(categories, categoriesTitleHtml, categoryHtml);
       insertHtml("#main-content", categoriesViewHtml);
     }, false);
   }, false);
